@@ -1,4 +1,4 @@
-#java -jar proguard\proguard-base-5.3.1.jar @L01.2.pro
+#java -jar proguard\proguard-base-5.3.3.jar @work01.pro
 
 -injars       target/L01.1-maven.jar
 -outjars      target/L01.2.1-release.jar
