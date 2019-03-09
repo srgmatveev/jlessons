@@ -103,7 +103,7 @@
                     <outjar>L01.2.1-release.jar</outjar>
 
                     <options>
-                        <option>-keep class ${mainClassName}</option>
+                        <option>-keep class ${mainClassName} {public static void main(java.lang.String[]);}</option>
                         <option>-dontwarn</option>
                     </options>
 
