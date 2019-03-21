@@ -7,14 +7,14 @@ public class MyOwnArrayList<T> implements List<T>, RandomAccess, Cloneable {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE-1;
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 1;
 
     public MyOwnArrayList(int initialCapacity) {
-        if (initialCapacity >0) {
+        if (initialCapacity > 0) {
             this.elementData = new Object[initialCapacity];
-                   } else if (initialCapacity < 0) {
+        } else if (initialCapacity < 0) {
 
-            throw new IllegalArgumentException("Illegal Capacity: "+
+            throw new IllegalArgumentException("Illegal Capacity: " +
                     initialCapacity);
         }
     }
@@ -67,22 +67,28 @@ public class MyOwnArrayList<T> implements List<T>, RandomAccess, Cloneable {
     }
 
     public boolean add(T t) {
-       if (!checkRange(size)) return false;
-       if (size==0) elementData = new Object[1];
-       if (needResize()) this.resize(size+1);
-       elementData[size++] = t;
-       return true;
+        try {
+            if (!checkRange(size)) return false;
+        } catch (Exception e) {
+            return false;
+        }
+        if (size == 0) elementData = new Object[1];
+        if (needResize()) this.resize(size + 1);
+        elementData[size++] = t;
+
+
+        return true;
 
     }
 
-    private boolean needResize(){
-        if (size>=elementData.length) return true;
-        return  false;
+    private boolean needResize() {
+        if (size >= elementData.length) return true;
+        return false;
     }
 
-    private void resize(int newSize){
-        if (newSize>=Integer.MAX_VALUE-1) throw new ArrayStoreException();
-        elementData = Arrays.copyOf(elementData,newSize);
+    private void resize(int newSize) {
+        if (newSize >= Integer.MAX_VALUE - 1) throw new ArrayStoreException();
+        elementData = Arrays.copyOf(elementData, newSize);
     }
 
     public boolean remove(Object o) {
@@ -94,7 +100,19 @@ public class MyOwnArrayList<T> implements List<T>, RandomAccess, Cloneable {
     }
 
     public boolean addAll(Collection<? extends T> c) {
-        return false;
+        try {
+            if (!checkRange(size + c.size())) return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+        int cSize = c.size();
+        if (cSize == 0)
+            return false;
+
+        for (T item : c) add(item);
+
+        return true;
     }
 
     public boolean addAll(int index, Collection<? extends T> c) {
@@ -109,12 +127,29 @@ public class MyOwnArrayList<T> implements List<T>, RandomAccess, Cloneable {
         return false;
     }
 
+    @Override
+    public void sort(Comparator<? super T> c) {
+        Arrays.sort((T[]) elementData, 0, size, c);
+    }
+
+    public MyOwnArrayList clone(){
+        try {
+            MyOwnArrayList<?> v = (MyOwnArrayList<?>) super.clone();
+            v.elementData = Arrays.copyOf(elementData, size);
+            v.size = size;
+            return v;
+        } catch (CloneNotSupportedException e) {
+            // this shouldn't happen, since we are Cloneable
+            throw new InternalError(e);
+        }
+    }
+
     public void clear() {
 
     }
 
     public T get(int index) {
-        return (T)elementData[index];
+        return (T) elementData[index];
     }
 
     public T set(int index, T element) {
@@ -150,8 +185,8 @@ public class MyOwnArrayList<T> implements List<T>, RandomAccess, Cloneable {
         return null;
     }
 
-    private boolean checkRange(int value){
-        if (value>MAX_ARRAY_SIZE-1) return false;
+    private boolean checkRange(int value) {
+        if (value > MAX_ARRAY_SIZE - 1) return false;
         return true;
     }
 }
