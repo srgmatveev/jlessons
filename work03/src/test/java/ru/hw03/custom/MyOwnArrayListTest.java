@@ -1,14 +1,23 @@
 package ru.hw03.custom;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyOwnArrayListTest {
 
+    private MyOwnArrayList<Integer> testList;
+
+    @BeforeEach
+    void setUp() {
+        testList = new MyOwnArrayList<>();
+    }
+
     @Test
     void add() {
-    MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
     testList.add(15);
     assertEquals(testList.size(),1);
     testList.add(22);
@@ -17,23 +26,22 @@ class MyOwnArrayListTest {
 
     @Test
     void iterable(){
-
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
+        int i=0;
         for (int item:testList){
-
+            i++;
         }
-
+        assertEquals(i,0);
         testList.add(15);
         testList.add(22);
         testList.add(32);
         for (int item:testList){
-
+            i++;
         }
+        assertEquals(i,3);
     }
 
     @Test
     void get(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         testList.add(15);
         testList.add(22);
         testList.add(32);
@@ -46,7 +54,6 @@ class MyOwnArrayListTest {
 
     @Test
     void set(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         testList.add(15);
         testList.add(22);
         testList.add(32);
@@ -59,7 +66,6 @@ class MyOwnArrayListTest {
 
     @Test
     void addAll(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         MyOwnArrayList<Integer> fromList= new MyOwnArrayList<>();
         fromList.add(15);
         fromList.add(22);
@@ -71,7 +77,6 @@ class MyOwnArrayListTest {
 
     @Test
     void addAllZeroSize(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         MyOwnArrayList<Integer> fromList= new MyOwnArrayList<>();
         testList.addAll(fromList);
         assertEquals(testList.size(),0);
@@ -85,7 +90,6 @@ class MyOwnArrayListTest {
 
     @Test
     void ascendingSort(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         testList.add(32);
         testList.add(22);
         testList.add(15);
@@ -96,14 +100,13 @@ class MyOwnArrayListTest {
         fromList.add(18);
         fromList.add(22);
         fromList.add(32);
-        testList.sort((a,b)-> a.compareTo(b));
+        testList.sort(Comparator.naturalOrder());
         assertIterableEquals(testList,fromList);
     }
 
 
     @Test
     void descendingSort(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         testList.add(15);
         testList.add(18);
         testList.add(32);
@@ -117,13 +120,12 @@ class MyOwnArrayListTest {
         fromList.add(15);
 
 
-        testList.sort((a,b)-> b.compareTo(a));
+        testList.sort(Comparator.reverseOrder());
         assertIterableEquals(testList,fromList);
     }
 
     @Test
     void cloneTest(){
-        MyOwnArrayList<Integer> testList= new MyOwnArrayList<>();
         testList.add(15);
         testList.add(18);
         testList.add(32);
