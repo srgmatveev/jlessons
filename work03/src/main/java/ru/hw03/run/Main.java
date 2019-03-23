@@ -1,9 +1,6 @@
 package ru.hw03.run;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String... args){
@@ -11,11 +8,11 @@ public class Main {
         Formatter formatter = new Formatter();
         formatter.format("%s",hello);
         System.out.println(formatter);
-        List<String> eee = new ArrayList<>();
+        Collection<String> eee = new ArrayList<>();
         eee.add("sss");
         eee.add("eee");
         eee.add("www");
-        eee.sort((a, b) -> a.compareTo(b));
+        Collections.sort((List<String>) eee, (a,b)->b.compareTo(a));
         System.out.println(eee);
 
     }
