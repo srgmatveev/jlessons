@@ -63,13 +63,13 @@ public class TestFramework {
                 object = cl.newInstance();
                 md.setAccessible(true);
 
-                if (md.isAnnotationPresent(Test.class) && onlyTestAnnotationPresent(md, cls)) {
+                if (md.isAnnotationPresent(Test.class) && otherTestAnnotationsNotPresent(md, cls)) {
                     if (before.isPresent()) {
-                        before.get().invoke(object);
+                        invokePresent(before, object);
                     }
                     md.invoke(object);
                     if (after.isPresent()) {
-                        after.get().invoke(object);
+                        invokePresent(after, object);
                     }
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -79,6 +79,10 @@ public class TestFramework {
         }
     }
 
+    private static void invokePresent(Optional<Method> method, Object object) throws IllegalAccessException, InvocationTargetException {
+        method.get().invoke(object);
+    }
+    
     private static void setAccessible(Optional<Method> method) {
         if (method.isPresent() && !method.get().isAccessible())
             method.get().setAccessible(true);
@@ -93,7 +97,7 @@ public class TestFramework {
         }
     }
 
-    private static boolean onlyTestAnnotationPresent(Method md, Class<? extends Annotation>[] cls) {
+    private static boolean otherTestAnnotationsNotPresent(Method md, Class<? extends Annotation>[] cls) {
         try (Stream<Class<? extends Annotation>> annotations = Arrays.stream(cls).filter(item -> md.isAnnotationPresent(item))) {
             if (annotations.count() > 0) return false;
         }
