@@ -5,11 +5,15 @@ import ru.hw06.Denomination.IDenominations;
 import ru.hw06.atm.ATM;
 import ru.hw06.atm.NonameBankATM;
 import ru.hw06.Cassete.ICashCassete;
+
+import java.util.Locale;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String... args) {
+        Locale rus = new Locale("ru", "RU");
+        Locale.setDefault(rus);
         ATM nonameBank = new NonameBankATM();
         ICashCassete nonameBankCashCassete = (ICashCassete) nonameBank.getCassete();
 
