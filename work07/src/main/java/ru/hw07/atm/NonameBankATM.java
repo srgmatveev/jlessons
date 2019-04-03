@@ -1,8 +1,6 @@
 package ru.hw07.atm;
 
 
-import com.sun.javafx.collections.MappingChange;
-import org.omg.PortableInterceptor.INACTIVE;
 import ru.hw07.Cassete.NonameBankRURCashCassete;
 import ru.hw07.Cassete.ICashCassete;
 
@@ -10,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-public class NonameBankATM implements ATM<Integer, Integer, ICashCassete> {
+public class NonameBankATM extends NonameBankATMBase<Integer> {
 
     ICashCassete cassete;
 
@@ -55,21 +53,14 @@ public class NonameBankATM implements ATM<Integer, Integer, ICashCassete> {
         }
         if (lost > 0) {
             System.out.println("Недостаточно купюр для выдачи");
-            refund(cashAmount);
+            refund(cashAmount,cassete);
             return null;
         }
         return cashAmount;
     }
 
 
-    private void refund(Map<Integer, Integer> cashAmount){
-        if (cashAmount==null) return;
-        Map<Integer, Integer> refundCassete = (Map<Integer, Integer>) cassete.getCassete();
 
-        for(Map.Entry<Integer, Integer> entry : cashAmount.entrySet()){
-           refundCassete.put(entry.getKey(),refundCassete.get(entry.getKey())+entry.getValue());
-        }
-    }
 
     private Optional<Integer> maxBanknote(ICashCassete cashCassete, int amount) {
 

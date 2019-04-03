@@ -1,15 +1,17 @@
 package ru.hw07.atm;
 
+import ru.hw07.Cassete.CashCassete;
 import ru.hw07.Cassete.ICashCassete;
 import ru.hw07.Cassete.NonameBankRURVipCashCassete;
 import ru.hw07.Denomination.IDenomination;
+import ru.hw07.Memento.IMemento;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-public class NonameBankVipATM implements ATM<IDenomination,Integer, ICashCassete> {
+public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
     ICashCassete cassete;
 
     public NonameBankVipATM() {
@@ -72,20 +74,13 @@ public class NonameBankVipATM implements ATM<IDenomination,Integer, ICashCassete
         }
         if (lost > 0) {
             System.out.println("Недостаточно купюр для выдачи");
-            refund(cashAmount);
+            refund(cashAmount, cassete);
             return null;
         }
         return cashAmount;
     }
 
-    private void refund(Map<IDenomination, Integer> cashAmount){
-        if (cashAmount==null) return;
-        Map<IDenomination, Integer> refundCassete = (Map<IDenomination, Integer>) cassete.getCassete();
 
-        for(Map.Entry<IDenomination, Integer> entry : cashAmount.entrySet()){
-            refundCassete.put(entry.getKey(),refundCassete.get(entry.getKey())+entry.getValue());
-        }
-    }
     @Override
     public int getTotalAmount() {
         Stream<Map.Entry<IDenomination, Integer>> stream = cassete.getCassete().entrySet().stream();
@@ -96,4 +91,6 @@ public class NonameBankVipATM implements ATM<IDenomination,Integer, ICashCassete
     public ICashCassete getCassete() {
         return this.cassete;
     }
+
+
 }

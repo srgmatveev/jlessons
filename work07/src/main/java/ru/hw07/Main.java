@@ -2,6 +2,8 @@ package ru.hw07;
 
 import ru.hw07.Denomination.IDenomination;
 import ru.hw07.Denomination.IDenominations;
+import ru.hw07.Department.DepartmentBase;
+import ru.hw07.Department.NonameBankDepartment;
 import ru.hw07.atm.ATM;
 import ru.hw07.atm.NonameBankATM;
 import ru.hw07.Cassete.ICashCassete;
@@ -13,6 +15,8 @@ import java.util.Map;
 public class Main {
 
     public static void main(String... args) {
+
+        System.out.println("Simple ATM");
         ATM nonameBank = new NonameBankATM();
         ICashCassete nonameBankCashCassete = (ICashCassete) nonameBank.getCassete();
 
@@ -23,21 +27,8 @@ public class Main {
 
         printTotalAmount(nonameBank);
 
-        Map<Integer,Integer> amount = nonameBank.withDrawAmount(6500);
-
-        printOut(amount);
-        printTotalAmount(nonameBank);
-
-        amount = nonameBank.withDrawAmount(4);
-        printOut(amount);
-        printTotalAmount(nonameBank);
-
-
-        amount = nonameBank.withDrawAmount(6);
-        printOut(amount);
-        printTotalAmount(nonameBank);
-
         System.out.println("VIP ATM");
+
         ATM nonameBankVip = new NonameBankVipATM();
         ICashCassete nonameBankVipCashCassete = (ICashCassete) nonameBankVip.getCassete();
         IDenominations denominationsVip = (IDenominations) nonameBankVipCashCassete.getDenominations();
@@ -45,19 +36,16 @@ public class Main {
             nonameBankVipCashCassete.addDenominationAmount(denomination,100);
         }
 
-        printTotalAmount(nonameBankVip);
+        printTotalAmount(nonameBank);
 
-        Map<IDenomination,Integer> amountVip = nonameBankVip.withDrawAmount(6500);
-        printOut(amountVip);
+        DepartmentBase nonameBankDepartment = new NonameBankDepartment();
+        nonameBankDepartment.addATM(nonameBank);
+        nonameBankDepartment.addATM(nonameBankVip);
+        printTotalDepartmentAmount(nonameBankDepartment);
 
-        amountVip = nonameBankVip.withDrawAmount(4);
-        printOut(amountVip);
-        printTotalAmount(nonameBankVip);
+        nonameBankDepartment.saveAtms();
 
 
-        amountVip = nonameBankVip.withDrawAmount(6);
-        printOut(amountVip);
-        printTotalAmount(nonameBankVip);
     }
 
 
@@ -72,4 +60,9 @@ public class Main {
    private static void printTotalAmount(ATM nonameBank){
        System.out.printf("Total Amount = %s RUR.\n",nonameBank.getTotalAmount());
    }
+
+    private static void printTotalDepartmentAmount(DepartmentBase department){
+        System.out.printf("Department Total Amount = %s RUR.\n",department.getTotalAmount());
+    }
+
 }
