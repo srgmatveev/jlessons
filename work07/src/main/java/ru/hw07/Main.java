@@ -9,7 +9,6 @@ import ru.hw07.atm.NonameBankATM;
 import ru.hw07.Cassete.ICashCassete;
 import ru.hw07.atm.NonameBankVipATM;
 
-import java.util.Locale;
 import java.util.Map;
 
 public class Main {
@@ -45,7 +44,18 @@ public class Main {
 
         nonameBankDepartment.saveAtms();
 
+        Map<Integer,Integer>  amount = nonameBank.withDrawAmount(6500);
+        printOut(amount);
+        printTotalAmount(nonameBank);
+        printTotalDepartmentAmount(nonameBankDepartment);
+        nonameBankDepartment.restoreAtms();
+        printTotalDepartmentAmount(nonameBankDepartment);
 
+
+        amount = nonameBank.withDrawAmount(6700);
+        printTotalDepartmentAmount(nonameBankDepartment);
+        nonameBankDepartment.restoreAtms();
+        printTotalDepartmentAmount(nonameBankDepartment);
     }
 
 

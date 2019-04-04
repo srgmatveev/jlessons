@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Automation Teller Machine interface
  */
-public interface ATM<T,U, W,Y> {
+public interface ATM<T,U, W> {
 
     /**
      * @param amount
@@ -21,9 +21,9 @@ public interface ATM<T,U, W,Y> {
     public int getTotalAmount();
 
 
-    public W getCassete();
+    W getCassete();
+    void setCassete(W w);
+    void restore(IMemento memento);
 
-    Y restore();
-
-    IMemento save(Y y);
+    IMemento save();
 }

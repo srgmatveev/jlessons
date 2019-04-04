@@ -8,25 +8,38 @@ import java.util.TreeMap;
 
 public class CashCassete implements ICashCassete<IDenomination, Integer, Integer, IDenominations> {
 
-    Map<Integer, Integer> cassete = new TreeMap<>((a, b) -> b - a);
+    Map<Integer, Integer> dispencer;
     IDenominations denominations;
-    public Map<Integer, Integer> getCassete() {
-        return cassete;
+    public Map<Integer, Integer> getDispencer() {
+        return dispencer;
     }
 
     public void setDenominations(IDenominations denominations) {
         this.denominations = denominations;
     }
 
-    public CashCassete() {
+    public CashCassete(){this.dispencer = new TreeMap<>((a, b) -> b - a);}
+    public CashCassete(ICashCassete cassete) {
+        this();
+        this.Init((IDenominations) cassete.getDenominations(), cassete.getDispencer());
+        }
+
+    public CashCassete(IDenominations denominations) {
+        Map<Integer,Integer> map =null;
+        this.Init(denominations, map);
 
     }
 
-    public CashCassete(IDenominations denominations) {
+    void Init(IDenominations denominations, Map<Integer, Integer> map){
         this.denominations = denominations;
         for (IDenomination denomination : denominations.getDenominations())
-            cassete.put(denomination.getNominal(), 0);
+        { Integer val = 0;
+            if(map != null){
+              val = map.get(denomination.getNominal());
+            }
 
+            dispencer.put(denomination.getNominal(), val);
+        }
     }
 
     public String toString() {
@@ -36,11 +49,11 @@ public class CashCassete implements ICashCassete<IDenomination, Integer, Integer
     @Override
     public ICashCassete addDenominationAmount(IDenomination denomination, Integer Amount) {
         int beforeAmount = 0;
-        if (cassete.containsKey(denomination.getNominal())) {
-            beforeAmount = cassete.get(denomination.getNominal());
+        if (dispencer.containsKey(denomination.getNominal())) {
+            beforeAmount = dispencer.get(denomination.getNominal());
         }
 
-        cassete.put(denomination.getNominal(), beforeAmount + Amount);
+        dispencer.put(denomination.getNominal(), beforeAmount + Amount);
         return this;
     }
 

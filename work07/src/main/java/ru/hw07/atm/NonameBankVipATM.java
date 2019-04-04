@@ -1,8 +1,8 @@
 package ru.hw07.atm;
 
-import ru.hw07.Cassete.CashCassete;
 import ru.hw07.Cassete.ICashCassete;
 import ru.hw07.Cassete.NonameBankRURVipCashCassete;
+import ru.hw07.Cassete.VipCashCassete;
 import ru.hw07.Denomination.IDenomination;
 import ru.hw07.Memento.IMemento;
 
@@ -12,10 +12,12 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 
 public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
-    ICashCassete cassete;
+    ICashCassete cassete = new NonameBankRURVipCashCassete();
 
     public NonameBankVipATM() {
         this.cassete = new NonameBankRURVipCashCassete();
+        super.setCassete(this.cassete);
+
     }
 
     @Override
@@ -31,7 +33,7 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
 
     private Optional<Integer> maxBanknote(ICashCassete cashCassete, int amount) {
 
-        for (Object entry : cassete.getCassete().entrySet()) {
+        for (Object entry : cassete.getDispencer().entrySet()) {
             Map.Entry<IDenomination, Integer> item = (Map.Entry<IDenomination, Integer>) entry;
             if (item.getKey().getNominal() <= amount && item.getValue() > 0) return Optional.ofNullable(item.getKey().getNominal());
         }
@@ -42,7 +44,7 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
 
     private Optional<Integer> minBanknote(ICashCassete cashCassete, int amount) {
 
-        int minValue = ((TreeMap<IDenomination, Integer>) cassete.getCassete()).lastEntry().getKey().getNominal();
+        int minValue = ((TreeMap<IDenomination, Integer>) cassete.getDispencer()).lastEntry().getKey().getNominal();
         if (minValue > amount) {
             System.out.println("Сумма меньше, чем самая маленькая купюра");
             return Optional.empty();
@@ -56,7 +58,7 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
 
         int lost = amount;
 
-        for (Object entry : cassete.getCassete().entrySet()) {
+        for (Object entry : cassete.getDispencer().entrySet()) {
             Map.Entry<IDenomination, Integer> item = (Map.Entry<IDenomination, Integer>) entry;
             if (item.getKey().getNominal() > maxVal.get() || item.getValue() == 0) continue;
 
@@ -74,7 +76,7 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
         }
         if (lost > 0) {
             System.out.println("Недостаточно купюр для выдачи");
-            refund(cashAmount, cassete);
+            refund(cashAmount);
             return null;
         }
         return cashAmount;
@@ -83,7 +85,7 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
 
     @Override
     public int getTotalAmount() {
-        Stream<Map.Entry<IDenomination, Integer>> stream = cassete.getCassete().entrySet().stream();
+        Stream<Map.Entry<IDenomination, Integer>> stream = cassete.getDispencer().entrySet().stream();
         return stream.map(x->x.getValue()*x.getKey().getNominal()).reduce(0,(x,y)->x+y);
     }
 
@@ -93,4 +95,15 @@ public class NonameBankVipATM extends NonameBankATMBase<IDenomination> {
     }
 
 
+    @Override
+    public void restore(IMemento memento) {
+        this.cassete = new VipCashCassete((ICashCassete) memento.restore());
+           }
+
+    @Override
+    public IMemento save() {
+        ICashCassete cashCassete = new VipCashCassete(this.cassete);
+        memento.save(cashCassete);
+        return memento;
+    }
 }

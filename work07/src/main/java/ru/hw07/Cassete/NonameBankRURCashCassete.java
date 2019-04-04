@@ -21,7 +21,7 @@ public class NonameBankRURCashCassete extends CashCassete {
       IDenominations denominations = addDenominations();
       this.setDenominations(denominations);
         for (IDenomination denomination : denominations.getDenominations())
-            cassete.put(denomination.getNominal(), 0);
+            dispencer.put(denomination.getNominal(), 0);
     }
 
 

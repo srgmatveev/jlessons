@@ -1,8 +1,10 @@
 package ru.hw07.atm;
 
 
+import ru.hw07.Cassete.CashCassete;
 import ru.hw07.Cassete.NonameBankRURCashCassete;
 import ru.hw07.Cassete.ICashCassete;
+import ru.hw07.Memento.IMemento;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +20,7 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
 
     public NonameBankATM() {
         this.cassete = new NonameBankRURCashCassete();
+        super.setCassete(this.cassete);
     }
 
     @Override
@@ -35,7 +38,7 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
 
         int lost = amount;
 
-        for (Object entry : cassete.getCassete().entrySet()) {
+        for (Object entry : cassete.getDispencer().entrySet()) {
             Map.Entry<Integer, Integer> item = (Map.Entry<Integer, Integer>) entry;
             if (item.getKey() > maxVal.get() || item.getValue() == 0) continue;
 
@@ -53,7 +56,7 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
         }
         if (lost > 0) {
             System.out.println("Недостаточно купюр для выдачи");
-            refund(cashAmount,cassete);
+            refund(cashAmount);
             return null;
         }
         return cashAmount;
@@ -64,7 +67,7 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
 
     private Optional<Integer> maxBanknote(ICashCassete cashCassete, int amount) {
 
-        for (Object entry : cassete.getCassete().entrySet()) {
+        for (Object entry : cassete.getDispencer().entrySet()) {
             Map.Entry<Integer, Integer> item = (Map.Entry<Integer, Integer>) entry;
             if (item.getKey() <= amount && item.getValue() > 0) return Optional.ofNullable(item.getKey());
         }
@@ -75,7 +78,7 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
 
     private Optional<Integer> minBanknote(ICashCassete cashCassete, int amount) {
 
-        int minValue = ((TreeMap<Integer, Integer>) cassete.getCassete()).lastEntry().getKey();
+        int minValue = ((TreeMap<Integer, Integer>) cassete.getDispencer()).lastEntry().getKey();
         if (minValue > amount) {
             System.out.println("Сумма меньше, чем самая маленькая купюра");
             return Optional.empty();
@@ -87,10 +90,24 @@ public class NonameBankATM extends NonameBankATMBase<Integer> {
     public int getTotalAmount() {
 
         int Amount = 0;
-        for (Object item : cassete.getCassete().entrySet()) {
+        for (Object item : cassete.getDispencer().entrySet()) {
             Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>) item;
             Amount += entry.getKey() * entry.getValue();
         }
         return Amount;
     }
+
+    @Override
+    public void restore(IMemento memento) {
+        this.cassete = new CashCassete((ICashCassete) memento.restore());
+    }
+
+    @Override
+    public IMemento save() {
+        ICashCassete cashCassete = new CashCassete(this.cassete);
+        memento.save(cashCassete);
+        return memento;
+    }
+
+
 }

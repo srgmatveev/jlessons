@@ -2,6 +2,7 @@ package ru.hw07.Department;
 
 import java.util.*;
 
+import ru.hw07.Cassete.ICashCassete;
 import ru.hw07.Memento.IMemento;
 import ru.hw07.atm.ATM;
 
@@ -26,14 +27,17 @@ public class NonameBankDepartment extends DepartmentBase {
     }
 
     public void restoreAtms() {
-        atms.stream().forEach(atm -> mementos.get(atm).restore());
+        atms.stream().forEach(atm ->
+        atm.restore((IMemento) mementos.get(atm))
+        );
+
     }
 
     @Override
     public void saveAtms() {
         mementos.clear();
         atms.stream().forEach(atm -> mementos.put(atm,
-                atm.save(atm.getCassete())
+                atm.save()
                 )
         );
 

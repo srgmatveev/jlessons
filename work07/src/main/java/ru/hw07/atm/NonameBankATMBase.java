@@ -1,13 +1,17 @@
 package ru.hw07.atm;
 
+
 import ru.hw07.Cassete.ICashCassete;
 import ru.hw07.Memento.IMemento;
 import ru.hw07.Memento.NonameBankMemento;
 
 import java.util.Map;
 
-public class NonameBankATMBase<T> implements ATM<T,Integer, ICashCassete,ICashCassete> {
+public class NonameBankATMBase<T> implements ATM<T,Integer, ICashCassete> {
+    ICashCassete cassete;
     IMemento memento = new NonameBankMemento();
+
+
     @Override
     public Map withDrawAmount(int amount) {
         return null;
@@ -24,20 +28,25 @@ public class NonameBankATMBase<T> implements ATM<T,Integer, ICashCassete,ICashCa
     }
 
     @Override
-    public ICashCassete restore() {
-        return (ICashCassete) memento.restore();
+    public void setCassete(ICashCassete cassete) {
+        this.cassete = cassete;
     }
 
     @Override
-    public IMemento save(ICashCassete cassete) {
-        memento.save(cassete);
-        return memento;
+    public void restore(IMemento mememnto) {
+
     }
 
-    void refund(Map<T, Integer> cashAmount, ICashCassete cassete){
+    @Override
+    public IMemento save() {
+        return null;
+    }
+
+
+    void refund(Map<T, Integer> cashAmount){
 
         if (cashAmount==null) return;
-        Map<T, Integer> refundCassete = (Map<T, Integer>) cassete.getCassete();
+        Map<T, Integer> refundCassete = (Map<T, Integer>) cassete.getDispencer();
 
         for(Map.Entry<T, Integer> entry : cashAmount.entrySet()) {
            refundCassete.put(entry.getKey(), refundCassete.get(entry.getKey()) + entry.getValue());

@@ -11,22 +11,33 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class VipCashCassete implements ICashCassete<IDenomination, Integer, IDenomination, IDenominations> {
-    Map<IDenomination, Integer> cassete = new TreeMap<>((a, b) -> b.getNominal() - a.getNominal());
+    Map<IDenomination, Integer> dispencer ;
 
     public VipCashCassete() {
+        this.dispencer = new TreeMap<>((a, b) -> b.getNominal() - a.getNominal());
     }
 
     public VipCashCassete(IDenominations denominations) {
         for (IDenomination denomination : denominations.getDenominations())
-            cassete.put(denomination, 0);
+            dispencer.put(denomination, 0);
+    }
+
+    public VipCashCassete(ICashCassete cassete) {
+     this();
+       IDenominations denominations = (IDenominations) cassete.getDenominations();
+       Map<IDenomination,Integer> map = cassete.getDispencer();
+        for (IDenomination denomination : denominations.getDenominations()){
+            dispencer.put(denomination,map.get(denomination));
+        }
+
     }
 
     @Override
     public ICashCassete addDenominationAmount(IDenomination denomination, Integer Amount) {
-        if (cassete.containsKey(denomination))
-            cassete.put(denomination, cassete.get(denomination) + Amount);
+        if (dispencer.containsKey(denomination))
+            dispencer.put(denomination, dispencer.get(denomination) + Amount);
         else
-            cassete.put(denomination, Amount);
+            dispencer.put(denomination, Amount);
 
         return this;
     }
@@ -34,7 +45,7 @@ public class VipCashCassete implements ICashCassete<IDenomination, Integer, IDen
     @Override
     public IDenominations getDenominations() {
         IDenominations denominations = new Denominations();
-        cassete.forEach((k,v)->denominations.addDenomination(k));
+        dispencer.forEach((k,v)->denominations.addDenomination(k));
         return denominations;
     }
 
@@ -42,13 +53,13 @@ public class VipCashCassete implements ICashCassete<IDenomination, Integer, IDen
     public void setDenominations(IDenominations denominations) {
 
     for(IDenomination item: denominations.getDenominations()){
-        if(!cassete.containsKey(item)) cassete.put(item,0);
+        if(!dispencer.containsKey(item)) dispencer.put(item,0);
     }
 
     }
 
     @Override
-    public Map<IDenomination, Integer> getCassete() {
-        return this.cassete;
+    public Map<IDenomination, Integer> getDispencer() {
+        return this.dispencer;
     }
 }

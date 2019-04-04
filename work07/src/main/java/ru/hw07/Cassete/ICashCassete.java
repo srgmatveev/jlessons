@@ -9,7 +9,7 @@ public interface ICashCassete<U,T, W, Y> {
     ICashCassete addDenominationAmount(U denomination, T Amount);
     Y getDenominations();
     void setDenominations(Y y);
-    Map<W, T> getCassete();
+    Map<W, T> getDispencer();
 
     }
 
