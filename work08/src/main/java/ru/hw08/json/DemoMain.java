@@ -18,7 +18,7 @@ public class DemoMain {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        String json = gson.toJson(object);
+        String json = gson.toJson(band);
        System.out.println(json);
     }
 }
