@@ -3,8 +3,21 @@ package ru.hw09.jdbc.connection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class MySQLConnectionHelper implements ConnectionHelper {
+    private String propertyFile;
+
+    public MySQLConnectionHelper() {
+        super();
+        propertyFile="db";
+    }
+
+    public MySQLConnectionHelper(String propertyFile) {
+        super();
+        this.propertyFile = propertyFile;
+    }
+
     @Override
     public Connection getConnection() {
         try {
@@ -29,6 +42,11 @@ public class MySQLConnectionHelper implements ConnectionHelper {
     private String buildUrl(){
         String url="";
         return  url;
+    }
+
+    private ResourceBundle getBundle(){
+        ResourceBundle rb = ResourceBundle.getBundle(propertyFile);
+        return rb;
     }
 
 }

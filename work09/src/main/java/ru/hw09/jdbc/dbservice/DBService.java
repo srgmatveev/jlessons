@@ -12,7 +12,7 @@ public interface DBService extends AutoCloseable {
 
     void createTables() throws SQLException;
 
-    <T extends DataSet> void save(T user);
+    <T extends DataSet> void save(T data);
     <T extends DataSet> T load(long id, Class<T> clazz);
     <T extends DataSet> List<T> loadAll();
 
