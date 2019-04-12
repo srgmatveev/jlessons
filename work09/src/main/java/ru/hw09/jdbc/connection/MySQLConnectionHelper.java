@@ -1,5 +1,7 @@
 package ru.hw09.jdbc.connection;
 
+import ru.hw09.jdbc.utils.ResBundle;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,18 +24,7 @@ public class MySQLConnectionHelper implements ConnectionHelper {
     public Connection getConnection() {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-
-            String url = "jdbc:mysql://" +       //db type
-                    "localhost:" +               //host name
-                    "3306/" +                    //port
-                    "db_example?" +              //db name
-                    "user=tully&" +              //login
-                    "password=tully&" +          //password
-
-                    "useSSL=false";             //do not use Secure Sockets Layer
-
-
-            return DriverManager.getConnection(url);
+            return DriverManager.getConnection(buildUrl());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -52,16 +43,16 @@ public class MySQLConnectionHelper implements ConnectionHelper {
     }
 
     private String addParam(String str) {
-        ResourceBundle rb = getBundle();
-        Optional<String> opt = getParamPropertiesFile(rb, str);
+        ResourceBundle rb = ResBundle.getBundle(propertyFile);
+        Optional<String> opt = ResBundle.getParamPropertiesFile(rb, str);
         if (opt.isPresent())
             return opt.get();
         return "";
     }
 
     private String addParam(String str, String def) {
-        ResourceBundle rb = getBundle();
-        Optional<String> opt = getParamPropertiesFile(rb, str);
+        ResourceBundle rb = ResBundle.getBundle(propertyFile);
+        Optional<String> opt = ResBundle.getParamPropertiesFile(rb, str);
         if (opt.isPresent())
             return opt.get();
         if (def != null) return def;
@@ -69,12 +60,12 @@ public class MySQLConnectionHelper implements ConnectionHelper {
     }
 
     private String addUrlParams(String... str) {
-        ResourceBundle rb = getBundle();
+        ResourceBundle rb = ResBundle.getBundle(propertyFile);
         Optional<String> opt;
 
         List<String> lst = new ArrayList<>();
         for (String string : str) {
-            opt = getParamPropertiesFile(rb, string);
+            opt = ResBundle.getParamPropertiesFile(rb, string);
             if (opt.isPresent())
                 lst.add(String.format("%s=%s", string, opt.get()));
         }
@@ -93,23 +84,8 @@ public class MySQLConnectionHelper implements ConnectionHelper {
         return "";
     }
 
-    private Optional<String> getParamPropertiesFile(ResourceBundle resourceBundle, String str) {
 
-        if (resourceBundle == null) return Optional.empty();
-        if (str == null || str.isEmpty()) return Optional.empty();
-        String res = null;
-        try {
-            res = resourceBundle.getString(str);
-        } catch (MissingResourceException e) {
-            return Optional.empty();
-        }
-        return res.isEmpty() ? Optional.empty() : Optional.of(res);
 
-    }
 
-    private ResourceBundle getBundle() {
-        ResourceBundle rb = ResourceBundle.getBundle(propertyFile);
-        return rb;
-    }
 
 }

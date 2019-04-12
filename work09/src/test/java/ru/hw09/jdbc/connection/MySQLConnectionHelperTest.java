@@ -2,9 +2,12 @@ package ru.hw09.jdbc.connection;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import ru.hw09.jdbc.utils.ResBundle;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -12,11 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MySQLConnectionHelperTest {
-    private ConnectionHelper connectionHelper;
+    private ConnectionHelper connectionHelper, connectionHelper1;
 
     @BeforeEach
     void setUp() {
         connectionHelper = new MySQLConnectionHelper("db_test");
+        connectionHelper1 = new MySQLConnectionHelper("db_test_fail");
     }
 
 
@@ -34,10 +38,7 @@ class MySQLConnectionHelperTest {
 
     @Test
     void resourcesBundle() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = connectionHelper.getClass().getDeclaredMethod("getBundle");
-        method.setAccessible(true);
-        assertEquals(method.getName(), "getBundle");
-        ResourceBundle rb = (ResourceBundle) method.invoke(connectionHelper);
+        ResourceBundle rb = ResBundle.getBundle("db_test");
         assertNotNull(rb);
         assertEquals(rb.getString("url"), "jdbc:mysql://");
 
@@ -45,20 +46,23 @@ class MySQLConnectionHelperTest {
 
     @Test
     void getParamPropertiesFile() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = connectionHelper.getClass().getDeclaredMethod("getBundle");
-        method.setAccessible(true);
-        ResourceBundle rb = (ResourceBundle) method.invoke(connectionHelper);
-
-        Class[] cArg = new Class[]{java.util.ResourceBundle.class, java.lang.String.class};
-        method = connectionHelper.getClass().getDeclaredMethod("getParamPropertiesFile",cArg);
-        method.setAccessible(true);
-        assertEquals(method.getName(), "getParamPropertiesFile");
-
-        Optional<String> name = (Optional<String>) method.invoke(connectionHelper, rb, "url");
+        ResourceBundle rb = ResBundle.getBundle("db_test");
+        Optional<String> name = ResBundle.getParamPropertiesFile(rb,"url");
         assertEquals(name.get(),"jdbc:mysql://");
-        name = (Optional<String>) method.invoke(connectionHelper, rb, "test_url");
+        name = ResBundle.getParamPropertiesFile( rb, "test_url");
         assertFalse(name.isPresent());
-        name = (Optional<String>) method.invoke(connectionHelper, rb, "eees");
+        name = ResBundle.getParamPropertiesFile( rb, "eees");
         assertFalse(name.isPresent());
+     }
+
+    @Test
+    void getConnection() throws SQLException {
+        assertNotNull(connectionHelper.getConnection());
+    }
+
+    @Test
+    void getConnectionFail()  {
+
+       assertThrows(java.lang.RuntimeException.class, ()-> connectionHelper1.getConnection());
     }
 }
