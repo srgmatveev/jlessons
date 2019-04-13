@@ -12,6 +12,7 @@
         <maven.compiler.source>1.9</maven.compiler.source>
         <maven.compiler.target>1.9</maven.compiler.target>
         <mysql>8.0.15</mysql>
+        <org.apache.commons>3.8.1</org.apache.commons>
     </properties>
 
     <dependencies>
@@ -21,6 +22,14 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${org.apache.commons}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

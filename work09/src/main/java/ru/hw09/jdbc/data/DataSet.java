@@ -11,6 +11,7 @@ public abstract class DataSet {
         return id;
     }
 
+    public abstract String getTableName();
 }
 
 

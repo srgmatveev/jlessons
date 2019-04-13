@@ -1,5 +1,6 @@
 package ru.hw09.jdbc.utils;
 
+import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -24,4 +25,18 @@ public class ResBundle {
         return rb;
     }
 
+    public static String readAllFile(ResourceBundle resourceBundle){
+        Enumeration bundleKeys = resourceBundle.getKeys();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(");
+        while (bundleKeys.hasMoreElements()) {
+            stringBuilder.append(" , ");
+            String key = (String)bundleKeys.nextElement();
+            stringBuilder.append(resourceBundle.getString(key));
+
+        }
+        stringBuilder.append(");");
+        return stringBuilder.toString().replaceFirst(" ,","");
+
+    }
 }

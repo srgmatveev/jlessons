@@ -4,9 +4,10 @@ import java.lang.annotation.Annotation;
 
 @TableAlias(name = "User")
 public class UsersDataSet extends DataSet {
+    @DataField
     private String name;
+    @DataField
     private int age;
-
 
     public UsersDataSet(long id, String name, int age) {
         super(id);

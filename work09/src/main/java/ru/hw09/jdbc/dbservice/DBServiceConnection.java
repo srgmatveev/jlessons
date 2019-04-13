@@ -39,7 +39,7 @@ public class DBServiceConnection implements DBService {
     }
 
     @Override
-    public <T extends DataSet> void save(T data) {
+    public <T extends DataSet> void save(T data) throws SQLException, NoSuchMethodException {
 
     }
 

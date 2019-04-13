@@ -21,6 +21,7 @@ public class DBServiceDropCreateTables extends DBServiceConnection {
         for(String table : tables){
             StringBuilder stringBuilder = new StringBuilder("DROP TABLE IF EXISTS ");
             stringBuilder.append(table);
+            System.out.println(String.format("Drop table '%s'", table));
             executor.execUpdate(stringBuilder.toString());
         }
     }
@@ -29,13 +30,17 @@ public class DBServiceDropCreateTables extends DBServiceConnection {
     public void createTables(String... tables) throws SQLException {
         Executor executor = new DDLExecutor(super.getConnection());
         for(String table : tables){
-            createTable(table);
+            createTable(table, executor);
         }
     }
 
-    private void createTable(String table){
+    private void createTable(String table, Executor executor) throws SQLException {
+        if (table.isEmpty()) return;
         ResourceBundle rb = ResBundle.getBundle(new StringBuilder(table.toLowerCase()).append("_table").toString());
-
+        StringBuilder stringBuilder = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS %s ", table));
+        stringBuilder.append(ResBundle.readAllFile(rb));
+        System.out.println(String.format("Create table '%s'", table));
+        executor.execUpdate(stringBuilder.toString());
     }
 
 }
