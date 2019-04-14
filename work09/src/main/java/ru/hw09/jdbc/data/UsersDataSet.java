@@ -9,6 +9,14 @@ public class UsersDataSet extends DataSet {
     @DataField
     private int age;
 
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    private void setAge(int age) {
+        this.age = age;
+    }
+
     public UsersDataSet(long id, String name, int age) {
         super(id);
         this.name = name;

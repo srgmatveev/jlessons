@@ -11,6 +11,10 @@ public abstract class DataSet {
         return id;
     }
 
+    private void setId(long id) {
+        this.id = id ;
+    }
+
     public abstract String getTableName();
 }
 

@@ -5,7 +5,6 @@ import ru.hw09.jdbc.data.DataSet;
 import ru.hw09.jdbc.data.UsersDataSet;
 import ru.hw09.jdbc.dbservice.DBService;
 import ru.hw09.jdbc.dbservice.DBServiceAllOperations;
-import ru.hw09.jdbc.dbservice.DBServiceDropCreateTables;
 
 public class DemoMain {
 
@@ -27,9 +26,11 @@ public class DemoMain {
 
             DataSet dataSet1 = new UsersDataSet("Sergio",35);
             dbService.save(dataSet1);
-            DataSet dataSet2 = new UsersDataSet(4,"Peter", 46);
+            DataSet dataSet2 = new UsersDataSet("Peter", 46);
             dbService.save(dataSet2);
 
+            dbService.load(dataSet1.getId(), UsersDataSet.class);
+            dbService.load(dataSet2.getId(), UsersDataSet.class);
         }
 
 

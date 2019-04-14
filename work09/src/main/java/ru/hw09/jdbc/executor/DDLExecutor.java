@@ -2,9 +2,13 @@ package ru.hw09.jdbc.executor;
 
 import ru.hw09.jdbc.handler.ResultHandler;
 
+import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DDLExecutor implements Executor {
     private final Connection connection;
@@ -14,15 +18,18 @@ public class DDLExecutor implements Executor {
     }
 
     @Override
-    public void execQuery(String query, ResultHandler handler) throws SQLException {
-
+    public CachedRowSet execQuery(String query, ResultHandler handler) throws SQLException {
+        return null;
     }
 
     @Override
-    public int execUpdate(String update) throws SQLException {
+    public Map<Integer, ResultSet> execUpdate(String update) throws SQLException {
+        Map<Integer,ResultSet> map = new HashMap<>();
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(update);
-            return stmt.getUpdateCount();
+            stmt.executeUpdate(update,Statement.RETURN_GENERATED_KEYS);
+            map.put(stmt.getUpdateCount(), stmt.getGeneratedKeys());
+            ResultSet keys = stmt.getGeneratedKeys();
+            return map;
         }
     }
 

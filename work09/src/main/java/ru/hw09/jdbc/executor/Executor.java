@@ -2,11 +2,13 @@ package ru.hw09.jdbc.executor;
 
 import ru.hw09.jdbc.handler.ResultHandler;
 
-import java.sql.PreparedStatement;
+import javax.sql.rowset.CachedRowSet;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface Executor {
-    void execQuery(String query, ResultHandler handler) throws SQLException;
-    int execUpdate(String update) throws SQLException;
+    CachedRowSet execQuery(String query, ResultHandler handler) throws SQLException;
+    Map<Integer, ResultSet> execUpdate(String update) throws SQLException;
 
 }

@@ -36,7 +36,7 @@ public class DBServiceDropCreateTables extends DBServiceConnection {
 
     private void createTable(String table, Executor executor) throws SQLException {
         if (table.isEmpty()) return;
-        ResourceBundle rb = ResBundle.getBundle(new StringBuilder(table.toLowerCase()).append("_table").toString());
+        ResourceBundle rb = ResBundle.getBundle(new StringBuilder(table).append("_table").toString());
         StringBuilder stringBuilder = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS %s ", table));
         stringBuilder.append(ResBundle.readAllFile(rb));
         System.out.println(String.format("Create table '%s'", table));

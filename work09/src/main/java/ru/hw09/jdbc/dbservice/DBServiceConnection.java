@@ -44,7 +44,7 @@ public class DBServiceConnection implements DBService {
     }
 
     @Override
-    public <T extends DataSet> T load(long id, Class<T> clazz) {
+    public <T extends DataSet> T load(long id, Class<T> clazz) throws SQLException {
         return null;
     }
 
