@@ -4,12 +4,12 @@ import ru.hw10.jdbc.connection.ConnectionHelper;
 import ru.hw10.jdbc.executor.DDLExecutor;
 import ru.hw10.jdbc.executor.Executor;
 import ru.hw10.jdbc.utils.ResBundle;
+import ru.hw10.jdbc.utils.TableUtils;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DBServiceDropCreateTables extends DBServiceConnection {
 
@@ -34,7 +34,23 @@ public class DBServiceDropCreateTables extends DBServiceConnection {
         Executor executor = new DDLExecutor(super.getConnection());
         Map<String,Set<String>> foreignKeys = new HashMap<>();
         for(String table : tables){
-           mergeMaps(foreignKeys,createTable(table, executor));
+            Optional<Set<String>> set = TableUtils.getAddonsCreateTables(table);
+            if (set.isPresent()){
+                for(String item : set.get()){
+                    mergeMaps(foreignKeys,createTable(item,executor));
+                }
+            }
+
+            mergeMaps(foreignKeys,createTable(table, executor));
+        }
+
+
+        for(Map.Entry<String,Set<String >> entry : foreignKeys.entrySet() ){
+            for(String item : entry.getValue()) {
+                String tmpVal = "ALTER TABLE " + entry.getKey() + " ADD " + item;
+                System.out.println(String.format("Create foreign key: %s", tmpVal));
+                executor.execUpdate(tmpVal);
+            }
         }
     }
 
@@ -58,8 +74,28 @@ public class DBServiceDropCreateTables extends DBServiceConnection {
         System.out.println(String.format("Create table '%s'", table));
         System.out.println(String.format("%s", buildString));
         executor.execUpdate(buildString);
+        createReferencesTables(table, executor, foreignKeys);
         return foreignKeys;
     }
+
+
+
+    private void createReferencesTables(String table, Executor executor,  Map<String, Set<String>> foreignKeys) throws SQLException {
+        Map<String,Set<String>> map  = new HashMap<>();
+
+        for(Map.Entry<String, Set<String>> entry : foreignKeys.entrySet()){
+            String tmpVal = entry.getKey();
+            if (tmpVal == null || tmpVal.isEmpty() ) continue;
+            Optional<String> optional = TableUtils.getTableNameFromFK(entry.getValue().toString(),"REFERENCES\\s*(\\w*)\\s*\\(");
+            if(optional.isPresent() && !optional.get().equals(table))
+            {
+                mergeMaps(map, createTable(optional.get(), executor));
+
+            }
+        }
+
+        if (map.size()>0) mergeMaps(foreignKeys,map);
+     }
 
     private String clearTableFromFK(String str, Map<String, Set<String>> fk) {
 

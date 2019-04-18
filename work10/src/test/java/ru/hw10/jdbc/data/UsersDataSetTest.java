@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UsersDataSet1 extends  UsersDataSet{
+    @IsOneToOne(name = "Address")
+    private AddressDataSet address;
+
     public UsersDataSet1(long id, String name, int age) {
         super(id, name, age);
     }

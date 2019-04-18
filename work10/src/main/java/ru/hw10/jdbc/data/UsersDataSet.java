@@ -9,6 +9,9 @@ public class UsersDataSet extends DataSet {
     @DataField
     private int age;
 
+    @IsOneToOne(name = "Address")
+    private AddressDataSet address;
+
     private void setName(String name) {
         this.name = name;
     }
@@ -38,15 +41,6 @@ public class UsersDataSet extends DataSet {
         return age;
     }
 
-    public String getTableName() {
-        if (this.getClass().isAnnotationPresent(TableAlias.class)) {
-            String tmpName = this.getClass().getAnnotation(TableAlias.class).name();
-            if (!tmpName.isEmpty())
-                return tmpName;
-        }
-        return this.getClass().getSimpleName();
-    }
-
 
     @Override
     public String toString() {
@@ -55,5 +49,13 @@ public class UsersDataSet extends DataSet {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    public AddressDataSet getAddress() {
+        return address;
+    }
+
+    private void setAddress(AddressDataSet address) {
+        this.address = address;
     }
 }
