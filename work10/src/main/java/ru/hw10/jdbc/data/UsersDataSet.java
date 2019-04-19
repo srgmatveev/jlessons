@@ -61,6 +61,8 @@ public class UsersDataSet extends DataSet {
                 "id='" + this.getId() + "'" +
                 ", name='" + name + '\'' +
                 ", age=" + age +
+                ", street=" + address.getStreet() +
+                ", phone=" + phone.getNumber() +
                 '}';
     }
 

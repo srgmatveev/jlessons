@@ -19,7 +19,7 @@ class ResBundleTest {
 
     @Test
     void readAllFile() {
-        String tmpString = "( phone_id BIGINT(20) , FOREIGN KEY(phone_id) REFERENCES Phone(id) , name VARCHAR(255) , id BIGINT(20) NOT NULL AUTO_INCREMENT , CONSTRAINT PK_User PRIMARY KEY (id) , age INT(3));";
+        String tmpString = "( phone BIGINT(20) , FOREIGN KEY(phone) REFERENCES Phone(id) , name VARCHAR(255) , id BIGINT(20) NOT NULL AUTO_INCREMENT , CONSTRAINT PK_User PRIMARY KEY (id) , age INT(3));";
         assertEquals(ResBundle.readAllFile(resourceBundle), tmpString);
         assertEquals(ResBundle.readAllFile(resourceBundle1),"();");
     }
@@ -28,6 +28,6 @@ class ResBundleTest {
     void readAllForeignKeys() {
         String table ="User";
         Map<String, Set<String>> map = ResBundle.readAllForeignKeys(table,resourceBundle);
-        assertEquals(map.toString(),"{User=[FOREIGN KEY(phone_id) REFERENCES Phone(id)]}");
+        assertEquals(map.toString(),"{User=[FOREIGN KEY(phone) REFERENCES Phone(id)]}");
     }
 }

@@ -42,4 +42,10 @@ class TableUtilsTest {
     assertEquals(TableUtils.getId(tmp),"1");
 
     }
+
+    @Test
+    void returnObject() {
+       String tmpStr = "ru.hw10.jdbc.data.PhoneDataSet1";
+       assertEquals(TableUtils.returnObject(tmpStr).getClass().getName(),tmpStr);
+    }
 }

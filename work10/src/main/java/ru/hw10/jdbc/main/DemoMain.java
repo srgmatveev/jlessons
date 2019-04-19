@@ -35,6 +35,8 @@ public class DemoMain {
             DataSet pnone3 = new PhoneDataSet("8926756871");
             dbService.save(pnone3);
 
+            dbService.load(pnone3.getId(), PhoneDataSet.class);
+
             DataSet address1 = new AddressDataSet("Pigalue");
             dbService.save(address1);
             DataSet address2 = new AddressDataSet("Dante rue");
@@ -47,9 +49,7 @@ public class DemoMain {
            dbService.save(dataSet2);
 
            dbService.load(dataSet1.getId(), UsersDataSet.class);
-   //         dbService.load(dataSet2.getId(), UsersDataSet.class);
-
-
+           dbService.load(dataSet2.getId(), UsersDataSet.class);
         }
 
 

@@ -187,7 +187,7 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
     }
 
     private <T extends DataSet> T returnLoadNewInstance(Class<T> clazz, CachedRowSet set) throws SQLException {
-        T t = generateNewInstance(clazz);
+        T t = TableUtils.generateNewInstance(clazz);
         set.next();
         long id = set.getLong("id");
         setIdFromLong(t, id);
@@ -224,6 +224,7 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
                             method.invoke(data, set.getBoolean(field.getName()));
                             break;
                         default:
+                            System.out.println(field.getType().getTypeName());
                             break;
                     }
 
@@ -245,7 +246,7 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
 
     private <T extends DataSet> String getTableName(Class<T> clazz) {
 
-        T t = generateNewInstance(clazz);
+        T t = TableUtils.generateNewInstance(clazz);
         setStaticTableNameVal(t);
         return t.getTableName();
 
@@ -256,55 +257,8 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
         tableNameVal = data.getTableName();
     }
 
-    private <T extends DataSet> T generateNewInstance(Class<T> clazz) {
-        Constructor<T>[] constructors = (Constructor<T>[]) clazz.getConstructors();
-        Constructor<T> constructor = constructors[0];
-        Collection<Object> objects = getConstructorParams(constructor);
-        try {
-            return constructor.newInstance(objects.toArray());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
 
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    private Collection<Object> getConstructorParams(Constructor constructor) {
-        Collection<Object> objects = new ArrayList<>();
-        Parameter[] parameters = constructor.getParameters();
-        for (Parameter param : parameters) {
-            switch (param.getType().getName()) {
-                case "java.lang.String":
-                    objects.add(new String(""));
-                    break;
-                case "boolean":
-                case "java.lang.Boolean":
-                    objects.add(true);
-                case "short":
-                case "byte":
-                case "int":
-                case "java.lang.Integer":
-                case "long":
-                case "java.lang.Long":
-                    objects.add(0);
-                    break;
-                case "float":
-                case "java.lang.Float":
-                case "java.lang.Double":
-                case "double":
-                    objects.add(0.0);
-                    break;
-                default:
-                    objects.add(new Object());
-                    break;
-            }
-        }
-        return objects;
-    }
 
     @Override
     public <T extends DataSet> Collection<T> loadAll() {
