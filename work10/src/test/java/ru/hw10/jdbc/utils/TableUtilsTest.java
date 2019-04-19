@@ -2,6 +2,7 @@ package ru.hw10.jdbc.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.hw10.jdbc.data.AddressDataSetTest;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -28,8 +29,9 @@ class TableUtilsTest {
     }
 
     @Test
-    void getAddonsCreateTables() throws IOException {
+    void getAddonsCreateTables()  {
         Optional<Set<String>> optionalStrings = TableUtils.getAddonsCreateTables("User");
-        assertEquals(optionalStrings.get().toString(),"[Address]");
+        assertTrue(optionalStrings.get().toString().contains("Address"));
+        assertTrue(optionalStrings.get().toString().contains("AddressDataSetTest"));
     }
 }

@@ -7,17 +7,66 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UsersDataSet1 extends  UsersDataSet{
+@TableAlias(name = "User")
+class UsersDataSet1 extends  DataSet{
+    @DataField
+    private String name;
+    @DataField
+    private int age;
     @IsOneToOne(name = "Address")
-    private AddressDataSet address;
+    private AddressDataSetTest address;
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    private void setAge(int age) {
+        this.age = age;
+    }
 
     public UsersDataSet1(long id, String name, int age) {
-        super(id, name, age);
+        super(id);this.name = name;
+        this.age = age;
+    }
+
+    public UsersDataSet1(String name, int age) {
+        super(-1);
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public int getAge() {
+        return age;
+    }
+
+
+    @Override
+    public String toString() {
+        return "UsersDataSet{" +
+                "id='" + this.getId() + "'" +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public AddressDataSetTest getAddress() {
+        return address;
+    }
+
+    private void setAddress(AddressDataSetTest address) {
+        this.address = address;
     }
 }
 
 @TableAlias(name = "User")
-class UsersDataSet2 extends  UsersDataSet{
+class UsersDataSet2 extends  UsersDataSet1{
+    @IsOneToOne
+    private AddressDataSetTest address;
     public UsersDataSet2(long id, String name, int age) {
         super(id, name, age);
     }
@@ -25,14 +74,14 @@ class UsersDataSet2 extends  UsersDataSet{
 
 
 @TableAlias(name = "")
-class UsersDataSet3 extends  UsersDataSet{
+class UsersDataSet3 extends  UsersDataSet1{
     public UsersDataSet3(long id, String name, int age) {
         super(id, name, age);
     }
 }
 
 class UsersDataSetTest {
-    private  UsersDataSet usersDataSet, usersDataSet1, usersDataSet2, usersDataSet3;
+    private  UsersDataSet1 usersDataSet, usersDataSet1, usersDataSet2, usersDataSet3;
     private String name;
     private int age;
     private long id;
@@ -42,7 +91,7 @@ class UsersDataSetTest {
         name = "Boris";
         age =35;
         id =1;
-        usersDataSet = new UsersDataSet(id,name,age);
+        usersDataSet = new UsersDataSet1(id,name,age);
     }
 
     @AfterEach
