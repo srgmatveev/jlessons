@@ -1,6 +1,8 @@
 package ru.hw10.jdbc.data;
 
+@TableAlias(name = "Address")
 public class AddressDataSet extends DataSet {
+    @DataField
     private String street;
 
     public AddressDataSet(long id, String street) {
@@ -9,8 +11,7 @@ public class AddressDataSet extends DataSet {
     }
 
     public AddressDataSet(String street) {
-        super(-1);
-        this.street = street;
+       this(-1, street);
     }
 
     public String getStreet() {

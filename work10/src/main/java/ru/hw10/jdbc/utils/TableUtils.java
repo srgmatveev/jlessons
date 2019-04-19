@@ -29,6 +29,11 @@ public class TableUtils {
 
     }
 
+    static public String getId(String item) {
+        Optional<String> optional= getTableNameFromFK(item, "\\{id='(\\w*)'");
+        return optional.isPresent()?optional.get():"";
+    };
+
     static Optional<String> getTopPackage(String str) {
         Optional<String> pack;
         String[] strings = str.split("\\.");

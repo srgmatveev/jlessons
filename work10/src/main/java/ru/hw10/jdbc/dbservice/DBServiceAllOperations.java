@@ -6,10 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import ru.hw10.jdbc.connection.ConnectionHelper;
 import ru.hw10.jdbc.data.DataField;
 import ru.hw10.jdbc.data.DataSet;
+import ru.hw10.jdbc.data.IsManyToOne;
+import ru.hw10.jdbc.data.IsOneToOne;
 import ru.hw10.jdbc.executor.DDLExecutor;
 import ru.hw10.jdbc.executor.DMLExecutor;
 import ru.hw10.jdbc.executor.Executor;
 import ru.hw10.jdbc.handler.ResultHandler;
+import ru.hw10.jdbc.utils.TableUtils;
 
 import javax.naming.spi.DirStateFactory;
 import javax.sql.rowset.CachedRowSet;
@@ -17,6 +20,7 @@ import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,12 +37,18 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
 
     @Override
     public <T extends DataSet> void save(T data) throws SQLException {
-        Executor executor = new DDLExecutor(super.getConnection());
-        String tableName = data.getTableName();
-        StringBuilder sb = new StringBuilder(String.format("INSERT INTO %s ", tableName));
-        sb.append(getFieldsString(data));
-        System.out.println(sb.toString());
-        setId(data, executor.execUpdate(sb.toString()));
+        try {
+
+
+            Executor executor = new DDLExecutor(super.getConnection());
+            String tableName = data.getTableName();
+            StringBuilder sb = new StringBuilder(String.format("INSERT INTO %s ", tableName));
+            sb.append(getFieldsString(data));
+            System.out.println(sb.toString());
+            setId(data, executor.execUpdate(sb.toString()));
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println(String.format("==== Table '%s': SAVE ERROR \"%s\" ====", data.getTableName(), e.getMessage()));
+        }
 
     }
 
@@ -84,7 +94,10 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
                 .append("VALUES(");
         for (Map.Entry<String, String> item : map.entrySet()) {
             keys.append(addKV(item.getKey()));
-            values.append(addKV(item.getValue()));
+            if (fromDataSet(data, item))
+                values.append(addKV(TableUtils.getId(item.getValue())));
+            else
+                values.append(addKV(item.getValue()));
         }
         keys.append(closeParenthesis);
         values.append(closeParenthesis);
@@ -92,6 +105,18 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
         String k = keys.toString().replaceFirst(" ,", "");
         String v = values.toString().replaceFirst(" ,", "");
         return new StringBuilder(k).append(" ").append(v).toString();
+    }
+
+
+    private static <T extends DataSet> boolean fromDataSet(T data, Map.Entry<String, String> item) {
+        try {
+            if (data.getClass().getDeclaredField(item.getKey()).isAnnotationPresent(IsOneToOne.class)
+                    || data.getClass().getDeclaredField(item.getKey()).isAnnotationPresent(IsManyToOne.class))
+                return true;
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
+        return false;
     }
 
     private static String addKV(String str) {
@@ -166,7 +191,7 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
         set.next();
         long id = set.getLong("id");
         setIdFromLong(t, id);
-        fillTByResultSet(t,set);
+        fillTByResultSet(t, set);
         System.out.println(t);
         set.close();
         return t;
@@ -186,7 +211,7 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
                 Method method = getMethod(data, funcName, cls);
 
                 try {
-                    switch(field.getType().getTypeName()){
+                    switch (field.getType().getTypeName()) {
                         case "java.lang.String":
                             method.invoke(data, set.getString(field.getName()));
                             break;
@@ -198,10 +223,9 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
                         case "java.lang.Boolean":
                             method.invoke(data, set.getBoolean(field.getName()));
                             break;
-                            default:
+                        default:
                             break;
                     }
-
 
 
                 } catch (IllegalAccessException e) {
@@ -217,7 +241,6 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
 
         }
     }
-
 
 
     private <T extends DataSet> String getTableName(Class<T> clazz) {

@@ -34,4 +34,12 @@ class TableUtilsTest {
         assertTrue(optionalStrings.get().toString().contains("Address"));
         assertTrue(optionalStrings.get().toString().contains("AddressDataSetTest"));
     }
+
+    @Test
+    void getId() {
+
+    String tmp = "AddressDataSet{id='1'street='Pigalue'}";
+    assertEquals(TableUtils.getId(tmp),"1");
+
+    }
 }

@@ -10,7 +10,20 @@ public class UsersDataSet extends DataSet {
     private int age;
 
     @IsOneToOne(name = "Address")
+    @DataField
     private AddressDataSet address;
+
+    public PhoneDataSet getPhone() {
+        return phone;
+    }
+
+    private void setPhone(PhoneDataSet phone) {
+        this.phone = phone;
+    }
+
+    @IsManyToOne(name = "Phone")
+    @DataField
+    private PhoneDataSet phone;
 
     private void setName(String name) {
         this.name = name;
@@ -20,16 +33,16 @@ public class UsersDataSet extends DataSet {
         this.age = age;
     }
 
-    public UsersDataSet(long id, String name, int age) {
+    public UsersDataSet(long id, String name, int age, AddressDataSet address, PhoneDataSet phone) {
         super(id);
         this.name = name;
         this.age = age;
+        this.address =  address;
+        this.phone =   phone;
     }
 
-    public UsersDataSet(String name, int age) {
-        super(-1);
-        this.name = name;
-        this.age = age;
+    public UsersDataSet(String name, int age, AddressDataSet address, PhoneDataSet phone) {
+       this(-1,name, age, address, phone);
     }
 
     public String getName() {
