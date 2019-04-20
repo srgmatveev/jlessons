@@ -11,6 +11,7 @@ import ru.hw10.jdbc.data.IsOneToOne;
 import ru.hw10.jdbc.executor.DDLExecutor;
 import ru.hw10.jdbc.executor.DMLExecutor;
 import ru.hw10.jdbc.executor.Executor;
+import ru.hw10.jdbc.executor.NoNameExecutor;
 import ru.hw10.jdbc.handler.ResultHandler;
 import ru.hw10.jdbc.utils.TableUtils;
 
@@ -185,13 +186,23 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
 
 
     private <T extends DataSet> T _load(long id, Class<?> clazz) throws SQLException {
-        Executor executor = new DMLExecutor(super.getConnection());
+        Executor executor = new NoNameExecutor(super.getConnection());
         String table = getTableName(clazz);
         if (table == null) return null;
-        CachedRowSet res = executor.execQuery(String.format(SELECT_TABLE, table, id), new ResultHandlerGetName());
-        return returnLoadNewInstance(clazz, res);
+        CachedRowSet res = executor.execQuery(String.format(SELECT_TABLE, table, id), new ResultHandlerNoName());
+        return _returnLoadNewInstance(clazz, res);
     }
 
+
+    private <T extends DataSet> T _returnLoadNewInstance(Class<?> clazz, CachedRowSet set) throws SQLException {
+        T t = (T) TableUtils.generateNewInstance(clazz);
+        set.next();
+        long id = set.getLong("id");
+        setIdFromLong(t, id);
+        fillTByResultSet(t, set);
+        set.close();
+        return t;
+    }
 
     private <T extends DataSet> T returnLoadNewInstance(Class<?> clazz, CachedRowSet set) throws SQLException {
         T t = (T) TableUtils.generateNewInstance(clazz);
@@ -314,4 +325,13 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
         }
     }
 
+    private static class ResultHandlerNoName implements ResultHandler {
+
+        @Override
+        public void handle(ResultSet result) throws SQLException {
+
+        }
+    }
 }
+
+
