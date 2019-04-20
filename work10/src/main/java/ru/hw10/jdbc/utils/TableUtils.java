@@ -3,6 +3,7 @@ package ru.hw10.jdbc.utils;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,11 @@ import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.*;
 import ru.hw10.jdbc.data.DataSet;
 import ru.hw10.jdbc.data.IsOneToOne;
+import ru.hw10.jdbc.dbservice.DBServiceAllOperations;
+import ru.hw10.jdbc.executor.DMLExecutor;
+import ru.hw10.jdbc.executor.Executor;
+
+import javax.sql.rowset.CachedRowSet;
 
 public class TableUtils {
     static public Optional<String> getTableNameFromFK(String string, String regexp) {
@@ -99,7 +105,7 @@ public class TableUtils {
         return list;
     }
 
-    static private boolean isDataSetExtends(Class<?> cls) {
+    static public boolean isDataSetExtends(Class<?> cls) {
         if (cls == null) return false;
         if (cls.getName().equals("java.lang.Object")) return false;
         Pattern pattern = Pattern.compile("\\.DataSet$");
@@ -143,9 +149,9 @@ public class TableUtils {
     }
 
 
-    public static <T extends DataSet> T generateNewInstance(Class<T> clazz) {
-        Constructor<T>[] constructors = (Constructor<T>[]) clazz.getConstructors();
-        Constructor<T> constructor = constructors[0];
+    public static Object generateNewInstance(Class<?> clazz) {
+        Constructor<Object>[] constructors = (Constructor<Object>[]) clazz.getConstructors();
+        Constructor<Object> constructor = constructors[0];
         Collection<Object> objects = TableUtils.getConstructorParams(constructor);
         try {
             return constructor.newInstance(objects.toArray());
@@ -188,7 +194,7 @@ public class TableUtils {
                     break;
                 default:
                     if (TableUtils.isDataSetExtends(returnObject(param.getType().getName()).getClass()))
-                       //System.out.println(param.getType().getName());
+                        //System.out.println(param.getType().getName());
                         objects.add(returnObject(param.getType().getName()));
                     else
                         objects.add(new Object());
@@ -197,5 +203,6 @@ public class TableUtils {
         }
         return objects;
     }
+
 
 }

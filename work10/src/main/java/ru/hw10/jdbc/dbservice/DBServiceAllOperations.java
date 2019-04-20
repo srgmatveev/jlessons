@@ -14,14 +14,11 @@ import ru.hw10.jdbc.executor.Executor;
 import ru.hw10.jdbc.handler.ResultHandler;
 import ru.hw10.jdbc.utils.TableUtils;
 
-import javax.naming.spi.DirStateFactory;
 import javax.sql.rowset.CachedRowSet;
-import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -186,8 +183,18 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
         return returnLoadNewInstance(clazz, res);
     }
 
-    private <T extends DataSet> T returnLoadNewInstance(Class<T> clazz, CachedRowSet set) throws SQLException {
-        T t = TableUtils.generateNewInstance(clazz);
+
+    private <T extends DataSet> T _load(long id, Class<?> clazz) throws SQLException {
+        Executor executor = new DMLExecutor(super.getConnection());
+        String table = getTableName(clazz);
+        if (table == null) return null;
+        CachedRowSet res = executor.execQuery(String.format(SELECT_TABLE, table, id), new ResultHandlerGetName());
+        return returnLoadNewInstance(clazz, res);
+    }
+
+
+    private <T extends DataSet> T returnLoadNewInstance(Class<?> clazz, CachedRowSet set) throws SQLException {
+        T t = (T) TableUtils.generateNewInstance(clazz);
         set.next();
         long id = set.getLong("id");
         setIdFromLong(t, id);
@@ -224,7 +231,12 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
                             method.invoke(data, set.getBoolean(field.getName()));
                             break;
                         default:
-                            System.out.println(field.getType().getTypeName());
+                            if (TableUtils.isDataSetExtends(field.getType())) {
+                                long fId = getIdField(set, field.getName());
+                                if (fId != -1) {
+                                    method.invoke(data, _load(fId, field.getType()));
+                                }
+                            }
                             break;
                     }
 
@@ -244,9 +256,9 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
     }
 
 
-    private <T extends DataSet> String getTableName(Class<T> clazz) {
+    private <T extends DataSet> String getTableName(Class<?> clazz) {
 
-        T t = TableUtils.generateNewInstance(clazz);
+        T t = (T) TableUtils.generateNewInstance(clazz);
         setStaticTableNameVal(t);
         return t.getTableName();
 
@@ -258,13 +270,29 @@ public class DBServiceAllOperations extends DBServiceDropCreateTables {
     }
 
 
-
-
     @Override
     public <T extends DataSet> Collection<T> loadAll() {
         return super.loadAll();
     }
 
+
+    private static long getIdField(CachedRowSet set, String fieldName) {
+        long id = -1;
+        ResultSetMetaData rsmd = null;
+        try {
+            rsmd = set.getMetaData();
+            int n = rsmd.getColumnCount();
+            for (int i = 1; i <= n; ++i) {
+                if (rsmd.getColumnLabel(i).equals(fieldName)) {
+                    id = set.getLong(i);
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
 
     private static class ResultHandlerGetName implements ResultHandler {
         public void handle(ResultSet result) throws SQLException {

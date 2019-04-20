@@ -28,24 +28,24 @@ public class DemoMain {
             dbService.createTables(tables_create);
 
 
-            DataSet pnone1 = new PhoneDataSet("911000201");
-            dbService.save(pnone1);
-            DataSet pnone2 = new PhoneDataSet("8800000555");
-            dbService.save(pnone2);
-            DataSet pnone3 = new PhoneDataSet("8926756871");
-            dbService.save(pnone3);
+            DataSet phone1 = new PhoneDataSet("911000201");
+            dbService.save(phone1);
+            DataSet phone2 = new PhoneDataSet("8800000555");
+            dbService.save(phone2);
+            DataSet phone3 = new PhoneDataSet("8926756871");
+            dbService.save(phone3);
 
-            dbService.load(pnone3.getId(), PhoneDataSet.class);
+            dbService.load(phone3.getId(), PhoneDataSet.class);
 
             DataSet address1 = new AddressDataSet("Pigalue");
             dbService.save(address1);
             DataSet address2 = new AddressDataSet("Dante rue");
             dbService.save(address2);
 
-            DataSet dataSet1 = new UsersDataSet("Sergio",35,  (AddressDataSet) address1, (PhoneDataSet) pnone1);
+            DataSet dataSet1 = new UsersDataSet("Sergio",35,  (AddressDataSet) address1, (PhoneDataSet) phone1);
             dbService.save(dataSet1);
 
-           DataSet dataSet2 = new UsersDataSet("Peter", 46,  (AddressDataSet) address2, (PhoneDataSet) pnone1);
+           DataSet dataSet2 = new UsersDataSet("Peter", 46,  (AddressDataSet) address2, (PhoneDataSet) phone3);
            dbService.save(dataSet2);
 
            dbService.load(dataSet1.getId(), UsersDataSet.class);
