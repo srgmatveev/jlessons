@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS User (
  name VARCHAR(255),
  age INT(3),
  phone_id BIGINT(20),
- address_id BIGINT(20),
+ address_id BIGINT(20) NOT NULL UNIQUE,
  CONSTRAINT users_pk PRIMARY KEY (id),
  FOREIGN KEY(phone_id) REFERENCES Phone(id)
 );
