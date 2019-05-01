@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "address")
@@ -17,6 +14,7 @@ import javax.persistence.Table;
 public class AddressDataSet extends DataSet {
     @Column
     private String street;
+
     @OneToOne(mappedBy = "address")
     private UserDataSet user;
 

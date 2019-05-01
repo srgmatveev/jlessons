@@ -16,6 +16,7 @@
         <property name="show_sql">true</property>
         <!--  Drop and re-create the database schema on startup  -->
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <mapping class="ru.hw10.hibernate.base.dataSet.PhoneDataSet"/>
         <mapping class="ru.hw10.hibernate.base.dataSet.AddressDataSet"/>
         <mapping class="ru.hw10.hibernate.base.dataSet.UserDataSet"/>

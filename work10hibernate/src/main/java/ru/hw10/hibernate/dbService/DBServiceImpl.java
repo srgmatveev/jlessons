@@ -37,8 +37,10 @@ public class DBServiceImpl implements DBService {
     @Override
     public void save(UserDataSet dataSet) {
         try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.beginTransaction();
             UserDataSetDAO userDataSetDAO = new UserDataSetDAO(session);
             userDataSetDAO.save(dataSet);
+            tx.commit();
         }
     }
 

@@ -43,7 +43,7 @@ class UserDataSetDAOTest {
         UserDataSet userDataSet = new UserDataSet();
         userDataSetDAO.save(userDataSet);
         id = userDataSet.getId();
-        assertNotEquals(id, 0);
+        assertNotNull(id);
         session.remove(userDataSet);
     }
 
@@ -73,7 +73,7 @@ class UserDataSetDAOTest {
         userDataSet.setName(name);
         userDataSetDAO.save(userDataSet);
         id = userDataSet.getId();
-        assertNotEquals(id, 0);
+        assertNotNull(id);
         UserDataSet user = userDataSetDAO.readByName(name);
         assertEquals(user.getName(),name);
         session.remove(userDataSet);
