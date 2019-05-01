@@ -43,8 +43,7 @@ public class DemoMain {
 
             UserDataSet sergio = dbService.readByName("Sergio");
             System.out.println("User by Name: " + sergio);
-            System.out.println(sergio.getPhoneNumbers().size());
-
+            
             Long user_id = sergio.getId();
             UserDataSet user = dbService.read(user_id);
             System.out.println("User by ID: " + user);

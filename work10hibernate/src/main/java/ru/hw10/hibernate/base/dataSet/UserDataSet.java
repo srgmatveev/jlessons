@@ -19,8 +19,7 @@ public class UserDataSet extends DataSet {
     private String name;
     @Column(length = 3)
     private int age;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AddressDataSet address;
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhoneDataSet> phoneNumbers = new ArrayList<>();

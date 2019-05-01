@@ -15,7 +15,8 @@ public class AddressDataSet extends DataSet {
     @Column
     private String street;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserDataSet user;
 
 }
