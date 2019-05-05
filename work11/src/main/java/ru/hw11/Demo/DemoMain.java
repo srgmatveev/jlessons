@@ -1,13 +1,13 @@
-package ru.hw10.hibernate.Demo;
+package ru.hw11.Demo;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ru.hw10.hibernate.base.DBService;
-import ru.hw10.hibernate.base.dataSet.AddressDataSet;
-import ru.hw10.hibernate.base.dataSet.PhoneDataSet;
-import ru.hw10.hibernate.base.dataSet.UserDataSet;
-import ru.hw10.hibernate.dbService.DBServiceImpl;
-import ru.hw10.hibernate.utils.SessionUtil;
+import ru.hw11.base.DBService;
+import ru.hw11.base.dataSet.AddressDataSet;
+import ru.hw11.base.dataSet.PhoneDataSet;
+import ru.hw11.base.dataSet.UserDataSet;
+import ru.hw11.dbService.DBServiceImpl;
+import ru.hw11.utils.SessionUtil;
 
 import java.util.List;
 
