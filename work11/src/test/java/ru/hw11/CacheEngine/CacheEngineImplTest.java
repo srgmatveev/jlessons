@@ -12,6 +12,8 @@ import ru.hw11.base.cache.CacheEngine;
 import ru.hw11.base.cache.MyElement;
 
 import java.lang.reflect.Field;
+import java.sql.Time;
+import java.util.Timer;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +23,7 @@ public class CacheEngineImplTest {
 
     @Before
     public void setUp() throws Exception {
-        cacheEngine = new CacheEngineImpl(5,2000,0,false);
+        cacheEngine = new CacheEngineImpl(5,5000,0,false);
     }
 
 
@@ -53,7 +55,13 @@ public class CacheEngineImplTest {
     }
 
     @Test
-    public void dispose() {
-        cacheEngine.dispose();
+    public void dispose() throws IllegalAccessException, NoSuchFieldException {
+        Field pTimer = cacheEngine.getClass().getDeclaredField("timer");
+        pTimer.setAccessible(true);
+        Timer timer = (Timer) pTimer.get(cacheEngine);
+        Field queue = timer.getClass().getDeclaredField("queue");
+        queue.setAccessible(true);
+        System.out.println(queue);
+
     }
 }
