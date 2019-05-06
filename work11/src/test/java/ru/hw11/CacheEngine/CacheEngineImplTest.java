@@ -54,14 +54,4 @@ public class CacheEngineImplTest {
         assertEquals(cacheEngine.getMissCount(),2251);
     }
 
-    @Test
-    public void dispose() throws IllegalAccessException, NoSuchFieldException {
-        Field pTimer = cacheEngine.getClass().getDeclaredField("timer");
-        pTimer.setAccessible(true);
-        Timer timer = (Timer) pTimer.get(cacheEngine);
-        Field queue = timer.getClass().getDeclaredField("queue");
-        queue.setAccessible(true);
-        System.out.println(queue);
-
-    }
 }

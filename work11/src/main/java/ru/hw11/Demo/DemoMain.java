@@ -14,10 +14,12 @@ import java.util.List;
 public class DemoMain {
 
     public static void main(String[] args) {
+
         DBService dbService = new DBServiceImpl();
 
         String status = dbService.getLocalStatus();
         System.out.println("Status: " + status);
+
 
 
 
@@ -34,6 +36,7 @@ public class DemoMain {
                 session.save(addressDataSet);
                 tx.commit();
             }
+
             UserDataSet userDataSet = new UserDataSet();
             userDataSet.setName("Sergio");
             userDataSet.addAddress(addressDataSet);
@@ -52,6 +55,7 @@ public class DemoMain {
             for(UserDataSet item : users)
                 System.out.println(item);
 
+        dbService.shutdown();
 
     }
 }
