@@ -14,6 +14,13 @@ public class AddressDataSet extends DataSet {
     @JoinColumn(name = "user_id")
     private UserDataSet user;
 
+    public AddressDataSet() {
+    }
+
+    public AddressDataSet(String street) {
+        this.street = street;
+    }
+
     public String getStreet() {
         return street;
     }

@@ -20,6 +20,8 @@
         <javax.cache.api>1.1.1</javax.cache.api>
         <ehcache>3.7.1</ehcache>
         <slf4j>1.7.26</slf4j>
+        <freemaker>2.3.28</freemaker>
+        <jetty>9.4.18.v20190429</jetty>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
@@ -126,6 +128,27 @@
             <version>2.0.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemaker}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty}</version>
+        </dependency>
+
 
 
     </dependencies>

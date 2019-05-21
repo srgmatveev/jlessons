@@ -30,6 +30,7 @@ class UserDataSetTest {
             Transaction tx = session.beginTransaction();
             userDataSet.setName(name);
             session.save(userDataSet);
+            session.remove(userDataSet);
             tx.commit();
         }
 
@@ -45,6 +46,7 @@ class UserDataSetTest {
             Transaction tx = session.beginTransaction();
             userDataSet.setAge(defAge);
             session.save(userDataSet);
+            session.remove(userDataSet);
             tx.commit();
         }
         assertEquals(userDataSet.getAge(), defAge);

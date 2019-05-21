@@ -10,12 +10,12 @@ import javax.cache.spi.CachingProvider;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-public class EnCacheUtil {
+public class EhCacheUtil {
     private final static String XML_CONFIG = "/ehcache.xml";
     private final CachingProvider provider;
     private final CacheManager cacheManager;
 
-    public EnCacheUtil() {
+    public EhCacheUtil() {
         provider = getProvider();
         cacheManager = initCacheManager();
         //MutableConfiguration<Long, UserDataSet> mutableConfiguration = new MutableConfiguration<>();

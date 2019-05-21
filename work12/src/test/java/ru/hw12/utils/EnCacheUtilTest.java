@@ -13,7 +13,7 @@ import javax.cache.Cache;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EnCacheUtilTest {
-    private EnCacheUtil enCacheUtil;
+    private EhCacheUtil ehCacheUtil;
     private UserDataSetDAO userDataSetDAO;
     private Session session;
     private Transaction transaction;
@@ -23,7 +23,7 @@ class EnCacheUtilTest {
         session = SessionUtil.getSession();
         transaction = session.beginTransaction();
         userDataSetDAO = new UserDataSetDAO(session);
-        enCacheUtil = new EnCacheUtil();
+        ehCacheUtil = new EhCacheUtil();
     }
 
     @AfterEach
@@ -38,7 +38,7 @@ class EnCacheUtilTest {
 
     @Test
     void getDataSetCache() {
-        Cache<Long, UserDataSet> cache = enCacheUtil.getDataSetCache("userDataSetCacheTest", Long.class, UserDataSet.class);
+        Cache<Long, UserDataSet> cache = ehCacheUtil.getDataSetCache("userDataSetCacheTest", Long.class, UserDataSet.class);
         Long id;
         UserDataSet userDataSet = new UserDataSet();
         userDataSet.setName("Fufel");

@@ -14,7 +14,7 @@
 
     <ehcache:cache alias="userDataSetCache" uses-template="default-template">
         <ehcache:key-type>java.lang.Long</ehcache:key-type>
-        <ehcache:value-type>ru.hw12.dataSet.UserDataSet</ehcache:value-type>
+        <ehcache:value-type>ru.hw12.base.dataSet.UserDataSet</ehcache:value-type>
 
     </ehcache:cache>
 
